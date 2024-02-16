@@ -91,16 +91,28 @@ def find_book_id(book:Book):
 
 @app.put("/books/update_book")
 async def update_book(book:BookRequest):
+    book_changed = False
     for i in range(len(BOOKS)):
         if BOOKS[i].id == book.id:
             BOOKS[i] = book
+            book_changed = True
+            break
+    if not book_changed:
+        raise HTTPException(status_code=404, detail="Book not found")
+    
+        
+
 
 @app.delete("/books/{book_id}")
 async def delete_book(book_id: int = Path(gt=0)):
+    book_changed = False
     for i in range(len(BOOKS)):
         if BOOKS[i].id  == book_id:
             BOOKS.pop(i)
+            book_changed = True
             break
+    if not book_changed:
+        raise HTTPException(status_code=404, detail="Book not found")
 
 
 
